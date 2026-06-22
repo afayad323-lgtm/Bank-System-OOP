@@ -1,11 +1,19 @@
 package service;
 import model.Account;
 import model.Transaction;
+import repository.AccountRepository;
 import util.OperationResult;
 
 public class AccountService {
+    private AccountRepository repository;
 
-    public OperationResult deposit (Account account , double amount){
+    public AccountService(AccountRepository repository){
+        this.repository = repository;
+    }
+
+    public OperationResult deposit (String name , double amount){
+
+        Account account = repository.findByName(name);
 
         if (account == null){
 
@@ -23,8 +31,8 @@ public class AccountService {
 
     }
 
-    public OperationResult withdraw (Account account , double amount){
-
+    public OperationResult withdraw (String name , double amount){
+Account account = repository.findByName(name);
         if (account == null){
 
             return new OperationResult(false , "Account Not Found");
@@ -34,7 +42,7 @@ public class AccountService {
             return new OperationResult(false , "Invalid amount");
         }
 
-        if (amount > account.getBalance()){
+        if (!account.canWithdraw(amount)){
 
             return new OperationResult(false , "Insufficient balance");
         }
@@ -44,8 +52,9 @@ public class AccountService {
         return new OperationResult(true , "Withdraw Successful");
     }
 
-    public OperationResult transfer(Account sender , Account receiver , double amount){
-
+    public OperationResult transfer(String senderName , String receiverName , double amount){
+    Account sender = repository.findByName(senderName);
+    Account receiver = repository.findByName(receiverName);
 
         if (sender == null || receiver == null){
 

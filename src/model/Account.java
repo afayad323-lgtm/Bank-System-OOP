@@ -1,17 +1,14 @@
 package model;
-import model.AccountType;
-import model.Transaction;
 import java.util.ArrayList;
 
-public class Account {
+public abstract class Account {
     private String ownerName;
     private double balance;
-    private AccountType type;
+
     private ArrayList<Transaction> transactions = new ArrayList<>();
 public Account(){}
-    public Account(String name , AccountType type){
+    public Account(String name ){
         this.ownerName = name;
-        this.type = type;
         this.balance =0;
     }
 
@@ -34,7 +31,7 @@ public Account(){}
     }
 @Override
     public String toString(){
-        return ownerName + " - "+ balance + " - " + type;
+        return ownerName + " - "+ balance ;
     }
 
     public void increaseBalance (double amount){
@@ -48,5 +45,7 @@ public Account(){}
     public void addTransaction(Transaction transaction){
         transactions.add(transaction);
     }
+
+    public abstract boolean canWithdraw(double amount);
 
 }

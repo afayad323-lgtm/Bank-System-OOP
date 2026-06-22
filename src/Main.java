@@ -1,5 +1,6 @@
-import model.Account;
-import model.AccountType;
+import model.*;
+import repository.AccountRepository;
+import repository.InMemoryAccountRepository;
 import service.AccountService;
 import service.BankService;
 import java.util.Scanner;
@@ -7,14 +8,15 @@ import util.OperationResult;
 public class Main {
     public static void main(String[] args) {
         Scanner reader = new Scanner(System.in);
-        BankService service = new BankService();
-        AccountService accountService = new AccountService();
+        AccountRepository repository = new InMemoryAccountRepository();
+        BankService service = new BankService(repository);
+        AccountService accountService = new AccountService(repository);
 
-        service.addAccount(new Account("Ahmed", AccountType.SAVINGS));
-        service.addAccount(new Account("Ali", AccountType.CURRENT));
-        service.addAccount(new Account("Eman", AccountType.SAVINGS));
-        service.addAccount(new Account("Malika", AccountType.CURRENT));
-        service.addAccount(new Account("Mostafa", AccountType.SAVINGS));
+        service.addAccount(new SavingsAccount("Ahmed"));
+        service.addAccount(new CurrentAccount("Ali"));
+        service.addAccount(new SavingsAccount("Eman"));
+        service.addAccount(new CurrentAccount("Malika"));
+        service.addAccount(new SavingsAccount("Mostafa"));
 
        while (true){
            System.out.println("----Bank System----");
@@ -33,10 +35,21 @@ public class Main {
                case 1: {
                    System.out.println("Enter Your Name: ");
                    String name = reader.next();
-                   System.out.println("Enter Account Type (SAVINGS / CURRENT): ");
-                   String type = reader.next().toUpperCase();
-                   AccountType acc = AccountType.valueOf(type);
-                   service.addAccount(new Account(name, acc));
+                   System.out.println("Choose Account Type: ");
+                   System.out.println("1- Current");
+                   System.out.println("2- Savings");
+                   System.out.println("3- VIP");
+                    int type = reader.nextInt();
+                    Account account;
+                    if (type == 1 ){
+                        account = new CurrentAccount(name);
+                    }else if (type == 2){
+                        account = new SavingsAccount(name);
+                    }else {
+                        account = new VIPAccount(name);
+                    }
+
+                    service.addAccount(account);
                    break;
                }
                case 2: {
@@ -63,8 +76,8 @@ public class Main {
                    System.out.println("Enter Your Amount: ");
                    double amount = reader.nextDouble();
 
-                   Account account = service.findAccount(name);
-                   OperationResult result = accountService.deposit(account , amount);
+
+                   OperationResult result = accountService.deposit(name , amount);
                    System.out.println(result.getMessage());
                    break;
                }
@@ -75,7 +88,7 @@ public class Main {
                    System.out.println("Enter Your Amount: ");
                    double amount = reader.nextDouble();
                    Account account = service.findAccount(name);
-                   OperationResult result = accountService.withdraw(account , amount);
+                   OperationResult result = accountService.withdraw(name , amount);
                    System.out.println(result.getMessage());
                    break;
                }
@@ -86,9 +99,8 @@ public class Main {
                    String receiverName = reader.next();
                    System.out.println("Enter amount: ");
                    double amount = reader.nextDouble();
-                   Account sender = service.findAccount(senderName);
-                   Account receiver = service.findAccount(receiverName);
-                   OperationResult result = accountService.transfer(sender,receiver,amount);
+
+                   OperationResult result = accountService.transfer(senderName,receiverName,amount);
                    System.out.println(result.getMessage());
                    break;
                }
