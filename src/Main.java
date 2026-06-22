@@ -1,11 +1,15 @@
 import model.Account;
 import model.AccountType;
+import service.AccountService;
 import service.BankService;
 import java.util.Scanner;
+import util.OperationResult;
 public class Main {
     public static void main(String[] args) {
         Scanner reader = new Scanner(System.in);
         BankService service = new BankService();
+        AccountService accountService = new AccountService();
+
         service.addAccount(new Account("Ahmed", AccountType.SAVINGS));
         service.addAccount(new Account("Ali", AccountType.CURRENT));
         service.addAccount(new Account("Eman", AccountType.SAVINGS));
@@ -20,7 +24,8 @@ public class Main {
            System.out.println("4- Deposit");
            System.out.println("5- Withdraw");
            System.out.println("6- Transfer");
-           System.out.println("7- Exit");
+           System.out.println("7- Show Transactions");
+           System.out.println("8- Exit");
            System.out.println("Choice: ");
            int choice = reader.nextInt();
 
@@ -58,7 +63,9 @@ public class Main {
                    System.out.println("Enter Your Amount: ");
                    double amount = reader.nextDouble();
 
-                   service.deposit(name, amount);
+                   Account account = service.findAccount(name);
+                   OperationResult result = accountService.deposit(account , amount);
+                   System.out.println(result.getMessage());
                    break;
                }
                case 5:{
@@ -67,7 +74,9 @@ public class Main {
 
                    System.out.println("Enter Your Amount: ");
                    double amount = reader.nextDouble();
-                   service.withdraw(name,amount);
+                   Account account = service.findAccount(name);
+                   OperationResult result = accountService.withdraw(account , amount);
+                   System.out.println(result.getMessage());
                    break;
                }
                case 6:{
@@ -77,10 +86,26 @@ public class Main {
                    String receiverName = reader.next();
                    System.out.println("Enter amount: ");
                    double amount = reader.nextDouble();
-                   service.transfer(senderName,receiverName,amount);
+                   Account sender = service.findAccount(senderName);
+                   Account receiver = service.findAccount(receiverName);
+                   OperationResult result = accountService.transfer(sender,receiver,amount);
+                   System.out.println(result.getMessage());
                    break;
                }
                case 7:{
+                    System.out.println("Enter Your Name: ");
+                    String name = reader.next();
+                    Account acc = service.findAccount(name);
+                    if (acc != null){
+                        acc.showTransactions();
+                    }
+                    else {
+                        System.out.println("Account Not Found");
+                    }
+                    break;
+
+               }
+               case 8:{
                    System.out.println("GOODBYE");
                    return;
                }

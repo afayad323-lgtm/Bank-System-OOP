@@ -8,7 +8,7 @@ public class Account {
     private double balance;
     private AccountType type;
     private ArrayList<Transaction> transactions = new ArrayList<>();
-
+public Account(){}
     public Account(String name , AccountType type){
         this.ownerName = name;
         this.type = type;
