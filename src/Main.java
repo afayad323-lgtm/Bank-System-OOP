@@ -17,7 +17,10 @@ public class Main {
            System.out.println("1- Add Account");
            System.out.println("2- Find Account");
            System.out.println("3- Show All Accounts");
-           System.out.println("4- Exit");
+           System.out.println("4- Deposit");
+           System.out.println("5- Withdraw");
+           System.out.println("6- Transfer");
+           System.out.println("7- Exit");
            System.out.println("Choice: ");
            int choice = reader.nextInt();
 
@@ -48,7 +51,36 @@ public class Main {
 
 
                }
-               case 4:{
+               case 4: {
+                   System.out.println("Enter Your Name: ");
+                   String name = reader.next();
+
+                   System.out.println("Enter Your Amount: ");
+                   double amount = reader.nextDouble();
+
+                   service.deposit(name, amount);
+                   break;
+               }
+               case 5:{
+                   System.out.println("Enter Your Name: ");
+                   String name = reader.next();
+
+                   System.out.println("Enter Your Amount: ");
+                   double amount = reader.nextDouble();
+                   service.withdraw(name,amount);
+                   break;
+               }
+               case 6:{
+                   System.out.println("Enter sender name: ");
+                   String senderName = reader.next();
+                   System.out.println("Enter receiver name: ");
+                   String receiverName = reader.next();
+                   System.out.println("Enter amount: ");
+                   double amount = reader.nextDouble();
+                   service.transfer(senderName,receiverName,amount);
+                   break;
+               }
+               case 7:{
                    System.out.println("GOODBYE");
                    return;
                }

@@ -22,15 +22,9 @@ public class Account {
     public double getBalance() {
         return balance;
     }
-    public void deposit (double amount){
-        balance += amount;
-        transactions.add(new Transaction("Deposit: " , amount));
-    }
 
-    public void withdraw (double amount){
-        balance -= amount;
-        transactions.add(new Transaction("Withdraw: " , amount));
-    }
+
+
 
     public void showTransactions(){
         if (transactions.isEmpty()){
@@ -41,6 +35,18 @@ public class Account {
 @Override
     public String toString(){
         return ownerName + " - "+ balance + " - " + type;
+    }
+
+    public void increaseBalance (double amount){
+        this.balance += amount;
+    }
+
+    public void decreaseBalance (double amount){
+        this.balance -= amount;
+    }
+
+    public void addTransaction(Transaction transaction){
+        transactions.add(transaction);
     }
 
 }
